@@ -661,9 +661,80 @@
     42% { transform: scale(1.2); }
     70% { transform: scale(1); }
   }
+
+  .music-toggle {
+    position: fixed;
+    right: 22px;
+    top: 22px;
+    z-index: 10;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    min-height: 44px;
+    padding: 10px 16px;
+    border: 1px solid rgba(255, 209, 102, 0.45);
+    border-radius: 999px;
+    background: rgba(10, 5, 12, 0.72);
+    color: #fff7dc;
+    font: 600 13px/1 'Hind', sans-serif;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    box-shadow: 0 14px 38px rgba(0,0,0,0.35), 0 0 28px rgba(255, 95, 147, 0.24);
+    backdrop-filter: blur(14px);
+    cursor: pointer;
+    transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+  }
+
+  .music-toggle:hover {
+    transform: translateY(-2px);
+    border-color: rgba(255, 179, 198, 0.85);
+    box-shadow: 0 18px 44px rgba(0,0,0,0.42), 0 0 34px rgba(255, 95, 147, 0.38);
+  }
+
+  .music-toggle .music-icon {
+    width: 24px;
+    height: 24px;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #ff5f93, #ffd166);
+    box-shadow: 0 0 18px rgba(255, 95, 147, 0.58);
+  }
+
+  .music-toggle.is-playing .music-icon {
+    animation: musicPulse 1.2s ease-in-out infinite;
+  }
+
+  .song-video {
+    position: fixed;
+    width: 1px;
+    height: 1px;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  @keyframes musicPulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.14); }
+  }
+
+  @media (max-width: 700px) {
+    .music-toggle {
+      top: 14px;
+      right: 14px;
+      padding: 9px 12px;
+      font-size: 11px;
+    }
+  }
 </style>
 </head>
 <body>
+
+<video class="song-video" id="songPlayer" src="song.m4v" preload="auto" loop playsinline></video>
+<button class="music-toggle" id="musicToggle" type="button" aria-label="Play song">
+  <span class="music-icon">♪</span>
+  <span class="music-label">Play song</span>
+</button>
 
 <!-- Stars -->
 <div class="stars" id="stars"></div>
@@ -895,6 +966,29 @@ function buildRing(id, emojis, count, radius) {
 
 buildRing('flowerRing', ['🌸','🌺','🌷','✿','💐','🌼'], 10, 48);
 buildRing('flowerRing2', ['🌸','🌺','🌷','✿','💐','🌼'], 8, 48);
+
+// Song button
+const songPlayer = document.getElementById('songPlayer');
+const musicToggle = document.getElementById('musicToggle');
+const musicLabel = musicToggle.querySelector('.music-label');
+
+musicToggle.addEventListener('click', async () => {
+  try {
+    if (songPlayer.paused) {
+      await songPlayer.play();
+      musicToggle.classList.add('is-playing');
+      musicLabel.textContent = 'Pause song';
+      musicToggle.setAttribute('aria-label', 'Pause song');
+    } else {
+      songPlayer.pause();
+      musicToggle.classList.remove('is-playing');
+      musicLabel.textContent = 'Play song';
+      musicToggle.setAttribute('aria-label', 'Play song');
+    }
+  } catch (error) {
+    musicLabel.textContent = 'Tap again';
+  }
+});
 </script>
 </body>
 </html>
