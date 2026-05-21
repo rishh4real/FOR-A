@@ -86,7 +86,7 @@
   }
 
   /* Floating petals */
-  .bloom-petal {
+  .petal {
     position: fixed;
     pointer-events: none;
     z-index: 1;
@@ -362,7 +362,7 @@
   .page {
     position: relative;
     z-index: 2;
-    min-height: 100vh;
+    min-height: 100svh;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -698,15 +698,73 @@
 
   /* Responsive */
   @media (max-width: 700px) {
+    body::before {
+      animation: none;
+      opacity: 0.65;
+    }
+
+    body::after {
+      opacity: 0.22;
+    }
+
+    .page {
+      min-height: 100svh;
+      padding: 84px 18px 72px;
+    }
+
     .p1-inner, .p2-inner {
       grid-template-columns: 1fr;
       text-align: center;
+      gap: 24px;
     }
     .text-right { padding-left: 0; padding-top: 30px; }
     .text-left { padding-right: 0; padding-bottom: 30px; }
     .small-photos-row { justify-content: center; }
     .photo-right { order: -1; }
-    .photo-main img, .photo-right img { max-width: 300px; margin: 0 auto; }
+    .photo-main::before,
+    .photo-right::before {
+      inset: -18px;
+      filter: blur(12px);
+      opacity: 0.58;
+      animation: none;
+    }
+    .photo-main img,
+    .photo-right img {
+      max-width: min(76vw, 285px);
+      margin: 0 auto;
+      box-shadow: 0 18px 48px rgba(0,0,0,0.48), 0 0 32px rgba(255,95,147,0.2);
+      animation-duration: 14s;
+    }
+    .main-quote,
+    .love-note {
+      font-size: clamp(24px, 8vw, 34px);
+      line-height: 1.38;
+      margin-bottom: 22px;
+    }
+    .small-photo {
+      width: 74px;
+      height: 88px;
+    }
+    .flower-ring,
+    .float-deco,
+    .floating-flower,
+    .bloom {
+      display: none;
+    }
+    .live-garden {
+      opacity: 0.42;
+      z-index: 1;
+    }
+    .css-flower {
+      opacity: 0.26;
+      filter: none;
+    }
+    .garden-grass {
+      opacity: 0.2;
+    }
+    .firefly {
+      box-shadow: 0 0 1.2vmin #ffd166;
+    }
   }
 
   /* Heart pulse */
@@ -891,9 +949,14 @@
 </section>
 
 <script>
+const isMobile = window.matchMedia('(max-width: 700px), (pointer: coarse)').matches;
+const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+const motionLite = isMobile || prefersReducedMotion;
+
 // Stars
 const starsEl = document.getElementById('stars');
-for (let i = 0; i < 120; i++) {
+const starCount = motionLite ? 42 : 120;
+for (let i = 0; i < starCount; i++) {
   const s = document.createElement('div');
   s.className = 'star';
   const size = Math.random() * 2.5 + 0.5;
@@ -926,8 +989,8 @@ function spawnPetal() {
   petalsEl.appendChild(p);
   setTimeout(() => p.remove(), 16000);
 }
-setInterval(spawnPetal, 600);
-for (let i = 0; i < 12; i++) spawnPetal();
+setInterval(spawnPetal, motionLite ? 1400 : 600);
+for (let i = 0; i < (motionLite ? 4 : 12); i++) spawnPetal();
 
 // Floating flowers
 const floatingFlowersEl = document.getElementById('floating-flowers');
@@ -947,8 +1010,10 @@ function spawnFloatingFlower() {
   floatingFlowersEl.appendChild(f);
   setTimeout(() => f.remove(), 16000 + delay * 1000);
 }
-setInterval(spawnFloatingFlower, 1200);
-for (let i = 0; i < 6; i++) spawnFloatingFlower();
+if (!motionLite) {
+  setInterval(spawnFloatingFlower, 1200);
+  for (let i = 0; i < 6; i++) spawnFloatingFlower();
+}
 
 // Bloom effects
 const bloomsEl = document.getElementById('blooms');
@@ -968,8 +1033,10 @@ function spawnBloom() {
   bloomsEl.appendChild(b);
   setTimeout(() => b.remove(), 4000 + delay * 1000);
 }
-setInterval(spawnBloom, 800);
-for (let i = 0; i < 4; i++) spawnBloom();
+if (!motionLite) {
+  setInterval(spawnBloom, 800);
+  for (let i = 0; i < 4; i++) spawnBloom();
+}
 
 // Living garden flowers
 const liveGarden = document.getElementById('liveGarden');
@@ -1046,11 +1113,11 @@ function releaseFirefly(index) {
 
 const grassPatch = document.createElement('div');
 grassPatch.className = 'garden-grass';
-for (let i = 0; i < 34; i++) grassPatch.appendChild(plantGrassBlade(i));
+for (let i = 0; i < (motionLite ? 14 : 34); i++) grassPatch.appendChild(plantGrassBlade(i));
 liveGarden.appendChild(grassPatch);
 
-for (let i = 0; i < 16; i++) plantLiveFlower(i);
-for (let i = 0; i < 16; i++) releaseFirefly(i);
+for (let i = 0; i < (motionLite ? 7 : 16); i++) plantLiveFlower(i);
+for (let i = 0; i < (motionLite ? 7 : 16); i++) releaseFirefly(i);
 
 // Flower rings
 function buildRing(id, emojis, count, radius) {
@@ -1067,8 +1134,10 @@ function buildRing(id, emojis, count, radius) {
   }
 }
 
-buildRing('flowerRing', ['🌸','🌺','🌷','✿','💐','🌼'], 10, 48);
-buildRing('flowerRing2', ['🌸','🌺','🌷','✿','💐','🌼'], 8, 48);
+if (!motionLite) {
+  buildRing('flowerRing', ['🌸','🌺','🌷','✿','💐','🌼'], 10, 48);
+  buildRing('flowerRing2', ['🌸','🌺','🌷','✿','💐','🌼'], 8, 48);
+}
 
 // Song button
 const songPlayer = document.getElementById('songPlayer');
