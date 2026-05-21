@@ -139,6 +139,163 @@
     100% { opacity: 0; transform: scale(1.3); }
   }
 
+  /* Living flower garden */
+  .live-garden {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 3;
+    overflow: hidden;
+  }
+
+  .live-flower {
+    --stem: 130px;
+    --size: 34px;
+    --petal: #ff7aa8;
+    --core: #ffd166;
+    position: absolute;
+    bottom: -18px;
+    left: var(--x);
+    width: var(--size);
+    height: calc(var(--stem) + var(--size));
+    transform-origin: bottom center;
+    opacity: 0.62;
+    animation: gardenSway var(--speed) ease-in-out infinite;
+    animation-delay: var(--delay);
+    filter: drop-shadow(0 0 18px rgba(255, 95, 147, 0.42));
+  }
+
+  .live-flower::before {
+    content: '';
+    position: absolute;
+    left: 50%;
+    bottom: 0;
+    width: 2px;
+    height: var(--stem);
+    background: linear-gradient(to top, rgba(94, 224, 194, 0.18), rgba(126, 238, 181, 0.72));
+    border-radius: 999px;
+    transform: translateX(-50%) scaleY(0);
+    transform-origin: bottom;
+    animation: stemGrow 3.4s ease var(--delay) forwards;
+  }
+
+  .live-flower::after {
+    content: '';
+    position: absolute;
+    left: calc(50% + 2px);
+    bottom: calc(var(--stem) * 0.42);
+    width: calc(var(--size) * 0.52);
+    height: calc(var(--size) * 0.22);
+    background: rgba(94, 224, 194, 0.28);
+    border-radius: 100% 0 100% 0;
+    transform: rotate(-28deg) scale(0);
+    transform-origin: left center;
+    animation: leafOpen 2.8s ease calc(var(--delay) + 0.8s) forwards;
+  }
+
+  .flower-head {
+    position: absolute;
+    left: 50%;
+    bottom: var(--stem);
+    width: var(--size);
+    height: var(--size);
+    transform: translate(-50%, 50%) scale(0);
+    animation: blossomOpen 3.2s cubic-bezier(.2,.8,.2,1) calc(var(--delay) + 1s) forwards,
+               blossomPulse 4.2s ease-in-out calc(var(--delay) + 3s) infinite;
+  }
+
+  .flower-head span {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 48%;
+    height: 48%;
+    background: radial-gradient(circle at 35% 30%, #fff3f8, var(--petal) 68%);
+    border-radius: 80% 20% 80% 20%;
+    transform-origin: 0 0;
+    opacity: 0.9;
+  }
+
+  .flower-head span:nth-child(1) { transform: rotate(0deg) translate(4%, -96%); }
+  .flower-head span:nth-child(2) { transform: rotate(72deg) translate(4%, -96%); }
+  .flower-head span:nth-child(3) { transform: rotate(144deg) translate(4%, -96%); }
+  .flower-head span:nth-child(4) { transform: rotate(216deg) translate(4%, -96%); }
+  .flower-head span:nth-child(5) { transform: rotate(288deg) translate(4%, -96%); }
+
+  .flower-core {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 34%;
+    height: 34%;
+    background: radial-gradient(circle, #fff7c8, var(--core));
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    box-shadow: 0 0 18px rgba(255, 209, 102, 0.75);
+  }
+
+  .side-bloom {
+    position: absolute;
+    width: 120px;
+    height: 260px;
+    opacity: 0.38;
+    filter: blur(0.2px) drop-shadow(0 0 18px rgba(255, 179, 198, 0.38));
+  }
+
+  .side-bloom.left { left: -34px; top: 16%; transform: rotate(10deg); }
+  .side-bloom.right { right: -30px; top: 54%; transform: rotate(-12deg) scaleX(-1); }
+
+  .side-bloom i {
+    position: absolute;
+    left: 54px;
+    bottom: 0;
+    width: 2px;
+    height: 230px;
+    background: linear-gradient(to top, transparent, rgba(94, 224, 194, 0.58), transparent);
+    border-radius: 999px;
+  }
+
+  .side-bloom b {
+    position: absolute;
+    width: 28px;
+    height: 28px;
+    background: radial-gradient(circle at 35% 35%, #fff1f6, #ff77a1 70%);
+    border-radius: 50% 50% 50% 8px;
+    animation: sideBloomPulse 4s ease-in-out infinite;
+  }
+
+  .side-bloom b:nth-child(2) { left: 30px; top: 28px; animation-delay: 0.2s; }
+  .side-bloom b:nth-child(3) { left: 66px; top: 74px; animation-delay: 0.8s; }
+  .side-bloom b:nth-child(4) { left: 24px; top: 136px; animation-delay: 1.3s; }
+  .side-bloom b:nth-child(5) { left: 70px; top: 188px; animation-delay: 1.9s; }
+
+  @keyframes stemGrow {
+    to { transform: translateX(-50%) scaleY(1); }
+  }
+
+  @keyframes leafOpen {
+    to { transform: rotate(-28deg) scale(1); }
+  }
+
+  @keyframes blossomOpen {
+    to { transform: translate(-50%, 50%) scale(1); }
+  }
+
+  @keyframes blossomPulse {
+    0%, 100% { filter: brightness(1); }
+    50% { filter: brightness(1.18); }
+  }
+
+  @keyframes gardenSway {
+    0%, 100% { transform: rotate(-2deg) translateY(0); }
+    50% { transform: rotate(3deg) translateY(-8px); }
+  }
+
+  @keyframes sideBloomPulse {
+    0%, 100% { transform: scale(0.9) rotate(-8deg); opacity: 0.64; }
+    50% { transform: scale(1.14) rotate(8deg); opacity: 1; }
+  }
+
   /* Layout */
   .page {
     position: relative;
@@ -198,6 +355,8 @@
     grid-template-columns: 1fr 1fr;
     gap: 0;
     align-items: center;
+    position: relative;
+    z-index: 4;
   }
 
   /* Big photo left */
@@ -351,6 +510,8 @@
     grid-template-columns: 1fr 1fr;
     gap: 0;
     align-items: center;
+    position: relative;
+    z-index: 4;
   }
 
   .text-left {
@@ -516,6 +677,12 @@
 <!-- Bloom effects -->
 <div id="blooms"></div>
 
+<!-- Living garden -->
+<div class="live-garden" id="liveGarden">
+  <div class="side-bloom left"><i></i><b></b><b></b><b></b><b></b></div>
+  <div class="side-bloom right"><i></i><b></b><b></b><b></b><b></b></div>
+</div>
+
 <!-- Watermark -->
 <div class="name-stamp">Apurvaa</div>
 
@@ -673,6 +840,43 @@ function spawnBloom() {
 }
 setInterval(spawnBloom, 800);
 for (let i = 0; i < 4; i++) spawnBloom();
+
+// Living garden flowers
+const liveGarden = document.getElementById('liveGarden');
+const gardenPalettes = [
+  ['#ff7aa8', '#ffd166'],
+  ['#ffb3c6', '#ffe08a'],
+  ['#e85d9e', '#f7d56b'],
+  ['#ff8fab', '#5ee0c2'],
+  ['#f6a6ff', '#ffd166']
+];
+
+function plantLiveFlower(index) {
+  const flower = document.createElement('div');
+  flower.className = 'live-flower';
+  const [petal, core] = gardenPalettes[index % gardenPalettes.length];
+  const size = 24 + Math.random() * 22;
+  const stem = 82 + Math.random() * 120;
+  const x = 4 + Math.random() * 92;
+  flower.style.cssText = `
+    --x: ${x}%;
+    --size: ${size}px;
+    --stem: ${stem}px;
+    --petal: ${petal};
+    --core: ${core};
+    --speed: ${5 + Math.random() * 5}s;
+    --delay: ${Math.random() * 4}s;
+  `;
+  flower.innerHTML = `
+    <div class="flower-head">
+      <span></span><span></span><span></span><span></span><span></span>
+      <div class="flower-core"></div>
+    </div>
+  `;
+  liveGarden.appendChild(flower);
+}
+
+for (let i = 0; i < 18; i++) plantLiveFlower(i);
 
 // Flower rings
 function buildRing(id, emojis, count, radius) {
