@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Apurvaa 🌸</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Hind:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --rose: #ff5f93;
+    --blush: #ffb3c6;
+    --gold: #ffd166;
+    --teal: #5ee0c2;
+    --plum: #180718;
+    --ink: #050409;
+  }
+
+  body {
+    background:
+      linear-gradient(180deg, #050409 0%, #120613 28%, #1d0818 48%, #071915 76%, #050409 100%);
+    font-family: 'Hind', sans-serif;
+    overflow-x: hidden;
+    min-height: 100vh;
+    position: relative;
+    color: #fff;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background:
+      linear-gradient(118deg, transparent 0 10%, rgba(255, 209, 102, 0.18) 11%, rgba(255, 95, 147, 0.1) 16%, transparent 24%),
+      linear-gradient(62deg, transparent 0 52%, rgba(94, 224, 194, 0.15) 56%, rgba(255, 179, 198, 0.12) 62%, transparent 70%),
+      repeating-linear-gradient(128deg, transparent 0 34px, rgba(255,255,255,0.028) 35px, transparent 38px 96px);
+    animation: backgroundFloat 16s ease-in-out infinite;
+    mix-blend-mode: screen;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background:
+      radial-gradient(circle at 18% 22%, rgba(255, 209, 102, 0.9) 0 1px, transparent 2px),
+      radial-gradient(circle at 72% 18%, rgba(255, 179, 198, 0.8) 0 1px, transparent 2px),
+      radial-gradient(circle at 82% 68%, rgba(94, 224, 194, 0.75) 0 1px, transparent 2px),
+      radial-gradient(circle at 36% 76%, rgba(255, 255, 255, 0.65) 0 1px, transparent 2px),
+      linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+    background-size: 130px 130px, 170px 170px, 150px 150px, 210px 210px, 72px 72px;
+    opacity: 0.35;
+    mask-image: linear-gradient(to bottom, rgba(0,0,0,0.9), transparent 92%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  @keyframes backgroundFloat {
+    0%, 100% { transform: translate3d(0, 0, 0) skewY(-2deg); }
+    50% { transform: translate3d(-24px, 18px, 0) skewY(2deg); }
+  }
+
+  /* Starfield */
+  .stars {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .star {
+    position: absolute;
+    background: #ffe7a8;
+    border-radius: 50%;
+    box-shadow: 0 0 10px rgba(255, 209, 102, 0.65);
+    animation: twinkle var(--d) ease-in-out infinite alternate;
+  }
+
+  @keyframes twinkle {
+    from { opacity: 0.1; transform: scale(1); }
+    to { opacity: 0.9; transform: scale(1.4); }
+  }
+
+  /* Floating petals */
+  .petal {
+    position: fixed;
+    pointer-events: none;
+    z-index: 1;
+    animation: petalFall linear infinite;
+    font-size: var(--sz);
+    opacity: 0.7;
+    filter: drop-shadow(0 0 8px rgba(255, 95, 147, 0.4));
+  }
+
+  @keyframes petalFall {
+    0% { transform: translateY(-60px) rotate(0deg) translateX(0); opacity: 0; }
+    10% { opacity: 0.7; }
+    90% { opacity: 0.5; }
+    100% { transform: translateY(110vh) rotate(720deg) translateX(var(--drift)); opacity: 0; }
+  }
+
+  /* Floating flowers */
+  .floating-flower {
+    position: fixed;
+    pointer-events: none;
+    z-index: 1;
+    font-size: 3rem;
+    opacity: 0.4;
+    filter: drop-shadow(0 0 15px rgba(255, 95, 147, 0.6));
+    animation: floatFlower 12s ease-in-out infinite;
+  }
+
+  @keyframes floatFlower {
+    0% { transform: translateY(0) translateX(0) scale(0.8); opacity: 0; }
+    15% { opacity: 0.5; }
+    85% { opacity: 0.3; }
+    100% { transform: translateY(-100px) translateX(50px) scale(1.1); opacity: 0; }
+  }
+
+  /* Bloom flowers */
+  .bloom {
+    position: fixed;
+    pointer-events: none;
+    z-index: 0;
+    font-size: 4rem;
+    opacity: 0;
+    animation: bloom 4s ease-in-out infinite;
+    filter: drop-shadow(0 0 20px rgba(255, 209, 102, 0.5));
+  }
+
+  @keyframes bloom {
+    0% { opacity: 0; transform: scale(0.2); }
+    30% { opacity: 0.6; transform: scale(1); }
+    70% { opacity: 0.4; transform: scale(1.1); }
+    100% { opacity: 0; transform: scale(1.3); }
+  }
+
+  /* Layout */
+  .page {
+    position: relative;
+    z-index: 2;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 60px 20px;
+    transition: all 0.6s ease;
+    isolation: isolate;
+    overflow: hidden;
+  }
+
+  .page::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(112deg, rgba(255, 209, 102, 0.19) 0 8%, transparent 17% 58%, rgba(255, 95, 147, 0.15) 66%, transparent 76%),
+      linear-gradient(24deg, transparent 0 34%, rgba(94, 224, 194, 0.11) 45%, transparent 58%),
+      linear-gradient(180deg, rgba(255,255,255,0.06), transparent 42%, rgba(0,0,0,0.28));
+    pointer-events: none;
+    z-index: -1;
+  }
+
+  .page:hover::before {
+    filter: saturate(1.2) brightness(1.08);
+  }
+
+  .page::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      repeating-linear-gradient(90deg, rgba(255,255,255,0.045) 0 1px, transparent 1px 86px),
+      repeating-linear-gradient(0deg, rgba(255,255,255,0.025) 0 1px, transparent 1px 86px);
+    opacity: 0.22;
+    mask-image: radial-gradient(ellipse at center, black 0%, transparent 78%);
+    pointer-events: none;
+    z-index: -1;
+  }
+
+  /* === PAGE 1 === */
+  .page-1 {
+    background:
+      linear-gradient(135deg, rgba(255, 95, 147, 0.18) 0 16%, transparent 36%),
+      linear-gradient(315deg, rgba(255, 209, 102, 0.15) 0 12%, transparent 32%),
+      radial-gradient(ellipse at 76% 46%, rgba(94, 224, 194, 0.14), transparent 42%),
+      linear-gradient(145deg, #060408 0%, #1d061a 45%, #0b0510 100%);
+  }
+
+  .p1-inner {
+    max-width: 900px;
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+    align-items: center;
+  }
+
+  /* Big photo left */
+  .photo-main {
+    position: relative;
+  }
+
+  .photo-main::before,
+  .photo-right::before {
+    content: '';
+    position: absolute;
+    inset: -32px;
+    background:
+      linear-gradient(135deg, rgba(255, 209, 102, 0.32), transparent 34%, rgba(94, 224, 194, 0.2)),
+      linear-gradient(48deg, transparent 0 34%, rgba(255, 95, 147, 0.35) 44%, transparent 58%);
+    border-radius: 48% 52% 44% 56% / 52% 45% 55% 48%;
+    filter: blur(20px);
+    opacity: 0.9;
+    pointer-events: none;
+    z-index: -1;
+    animation: photoAura 7s ease-in-out infinite;
+  }
+
+  @keyframes photoAura {
+    0%, 100% { transform: rotate(-2deg) scale(0.98); opacity: 0.78; }
+    50% { transform: rotate(3deg) scale(1.04); opacity: 1; }
+  }
+
+  .photo-main img {
+    width: 100%;
+    max-width: 420px;
+    border-radius: 60% 40% 55% 45% / 50% 55% 45% 50%;
+    border: 3px solid rgba(255, 209, 102, 0.42);
+    box-shadow:
+      0 24px 80px rgba(0,0,0,0.55),
+      0 0 55px rgba(255,95,147,0.32),
+      0 0 110px rgba(255,209,102,0.16);
+    display: block;
+    object-fit: cover;
+    aspect-ratio: 3/4;
+    filter: brightness(1.05) saturate(1.1);
+    animation: morphShape 8s ease-in-out infinite;
+  }
+
+  @keyframes morphShape {
+    0%, 100% { border-radius: 60% 40% 55% 45% / 50% 55% 45% 50%; }
+    33% { border-radius: 45% 55% 40% 60% / 55% 45% 55% 45%; }
+    66% { border-radius: 55% 45% 60% 40% / 45% 55% 45% 55%; }
+  }
+
+  .flower-ring {
+    position: absolute;
+    top: -20px; left: -20px; right: -20px; bottom: -20px;
+    border-radius: 50%;
+    pointer-events: none;
+    animation: rotateSlow 20s linear infinite;
+  }
+
+  @keyframes rotateSlow {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+
+  .flower-ring span {
+    position: absolute;
+    font-size: 22px;
+  }
+
+  /* Text right */
+  .text-right {
+    padding-left: 50px;
+  }
+
+  .goriye-text {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    color: #ffd166;
+    font-size: 13px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+    opacity: 0;
+    animation: fadeUp 1s ease 0.3s forwards;
+  }
+
+  .main-quote {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(22px, 3.5vw, 36px);
+    line-height: 1.55;
+    color: #fff;
+    text-shadow: 0 2px 18px rgba(0,0,0,0.48);
+    margin-bottom: 30px;
+    opacity: 0;
+    animation: fadeUp 1s ease 0.6s forwards;
+  }
+
+  .main-quote .highlight {
+    color: #ff8fab;
+    text-shadow: 0 0 30px rgba(255,100,150,0.5);
+  }
+
+  .flutter-line {
+    display: inline-block;
+    animation: flutter 3s ease-in-out infinite;
+    transform-origin: left center;
+  }
+
+  @keyframes flutter {
+    0%, 100% { transform: rotate(-1deg) translateY(0); }
+    25% { transform: rotate(1.5deg) translateY(-3px); }
+    50% { transform: rotate(-0.5deg) translateY(2px); }
+    75% { transform: rotate(2deg) translateY(-2px); }
+  }
+
+  .small-photos-row {
+    display: flex;
+    gap: 12px;
+    opacity: 0;
+    animation: fadeUp 1s ease 1s forwards;
+  }
+
+  .small-photo {
+    width: 90px;
+    height: 110px;
+    object-fit: cover;
+    border-radius: 50px 50px 40px 40px;
+    border: 2px solid rgba(255, 209, 102, 0.42);
+    filter: brightness(1.05) saturate(1.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .small-photo:hover {
+    transform: scale(1.08) translateY(-5px);
+    box-shadow: 0 10px 30px rgba(255,95,147,0.42);
+  }
+
+  /* === PAGE 2 === */
+  .page-2 {
+    background:
+      linear-gradient(40deg, rgba(94, 224, 194, 0.17) 0 16%, transparent 35%),
+      linear-gradient(140deg, transparent 0 48%, rgba(255, 209, 102, 0.15) 60%, transparent 76%),
+      radial-gradient(ellipse at 26% 48%, rgba(255, 95, 147, 0.18), transparent 46%),
+      linear-gradient(145deg, #04110f 0%, #130712 48%, #210915 100%);
+    flex-direction: column;
+  }
+
+  .p2-inner {
+    max-width: 900px;
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+    align-items: center;
+  }
+
+  .text-left {
+    padding-right: 50px;
+  }
+
+  .label-small {
+    font-size: 11px;
+    letter-spacing: 4px;
+    color: #5ee0c2;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+    opacity: 0;
+    animation: fadeUp 1s ease 0.2s forwards;
+  }
+
+  .love-note {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(20px, 3vw, 32px);
+    line-height: 1.6;
+    color: #e8f4e8;
+    text-shadow: 0 2px 18px rgba(0,0,0,0.5);
+    margin-bottom: 32px;
+    opacity: 0;
+    animation: fadeUp 1s ease 0.5s forwards;
+  }
+
+  .love-note .punjabi-word {
+    color: #7ddba0;
+    font-style: italic;
+    display: inline-block;
+    animation: bounce 2s ease-in-out infinite;
+  }
+
+  @keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-5px); }
+  }
+
+  .love-note .banger-word {
+    color: #ff8fab;
+    font-weight: 700;
+    display: inline-block;
+    animation: wiggle 2.5s ease-in-out infinite;
+  }
+
+  @keyframes wiggle {
+    0%, 100% { transform: rotate(-2deg); }
+    50% { transform: rotate(2deg); }
+  }
+
+  /* Big photo right side */
+  .photo-right {
+    position: relative;
+    display: flex;
+    justify-content: center;
+  }
+
+  .photo-right img {
+    width: 100%;
+    max-width: 380px;
+    border-radius: 45% 55% 50% 50% / 40% 45% 55% 60%;
+    border: 3px solid rgba(94, 224, 194, 0.42);
+    box-shadow:
+      0 24px 80px rgba(0,0,0,0.55),
+      0 0 55px rgba(94,224,194,0.28),
+      0 0 110px rgba(255,95,147,0.14);
+    display: block;
+    object-fit: cover;
+    aspect-ratio: 3/4;
+    filter: brightness(1.05) saturate(1.1);
+    animation: morphShape2 9s ease-in-out infinite;
+  }
+
+  @keyframes morphShape2 {
+    0%, 100% { border-radius: 45% 55% 50% 50% / 40% 45% 55% 60%; }
+    33% { border-radius: 55% 45% 45% 55% / 55% 60% 40% 45%; }
+    66% { border-radius: 40% 60% 55% 45% / 50% 45% 55% 50%; }
+  }
+
+  /* Name stamp */
+  .name-stamp {
+    font-family: 'Playfair Display', serif;
+    font-size: 90px;
+    font-weight: 700;
+    position: fixed;
+    bottom: -20px;
+    right: -10px;
+    color: rgba(255, 209, 102, 0.055);
+    letter-spacing: -4px;
+    pointer-events: none;
+    z-index: 1;
+    white-space: nowrap;
+  }
+
+  /* Divider between pages */
+  .page-divider {
+    position: relative;
+    z-index: 2;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, rgba(255,209,102,0.72), rgba(255,95,147,0.56), rgba(94,224,194,0.62), transparent);
+    box-shadow: 0 0 32px rgba(255, 95, 147, 0.35);
+  }
+
+  /* Floating flowers decoration */
+  .float-deco {
+    position: absolute;
+    font-size: 28px;
+    animation: floatDeco 6s ease-in-out infinite;
+    pointer-events: none;
+  }
+
+  @keyframes floatDeco {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    50% { transform: translateY(-15px) rotate(10deg); }
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(25px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Responsive */
+  @media (max-width: 700px) {
+    .p1-inner, .p2-inner {
+      grid-template-columns: 1fr;
+      text-align: center;
+    }
+    .text-right { padding-left: 0; padding-top: 30px; }
+    .text-left { padding-right: 0; padding-bottom: 30px; }
+    .small-photos-row { justify-content: center; }
+    .photo-right { order: -1; }
+    .photo-main img, .photo-right img { max-width: 300px; margin: 0 auto; }
+  }
+
+  /* Heart pulse */
+  .heart {
+    display: inline-block;
+    animation: heartbeat 1.2s ease-in-out infinite;
+    color: #ff6b8a;
+  }
+
+  @keyframes heartbeat {
+    0%, 100% { transform: scale(1); }
+    14% { transform: scale(1.3); }
+    28% { transform: scale(1); }
+    42% { transform: scale(1.2); }
+    70% { transform: scale(1); }
+  }
+</style>
+</head>
+<body>
+
+<!-- Stars -->
+<div class="stars" id="stars"></div>
+
+<!-- Floating petals -->
+<div id="petals"></div>
+
+<!-- Floating flowers -->
+<div id="floating-flowers"></div>
+
+<!-- Bloom effects -->
+<div id="blooms"></div>
+
+<!-- Watermark -->
+<div class="name-stamp">Apurvaa</div>
+
+<!-- ===== PAGE 1 ===== -->
+<section class="page page-1">
+  <div class="p1-inner">
+
+    <!-- Left: big main photo -->
+    <div class="photo-main">
+      <div class="flower-ring" id="flowerRing"></div>
+      <img src="apurvaa_1.jpg" alt="Apurvaa" />
+    </div>
+
+    <!-- Right: text + small photos -->
+    <div class="text-right">
+      <p class="goriye-text">✦ Apurvaa ✦</p>
+
+      <div class="main-quote">
+        <span class="flutter-line">"Tu ta bss</span><br>
+        <span class="flutter-line" style="animation-delay:0.3s; color:#ff8fab;">haa ee n kehndi</span><br>
+        <span class="flutter-line" style="animation-delay:0.6s;">goriye,</span><br><br>
+        <span class="flutter-line" style="animation-delay:0.9s; color:#ffb3c6;">tere utte album</span><br>
+        <span class="flutter-line" style="animation-delay:1.2s;">hune krja."</span>
+        <span class="heart"> ♥</span>
+      </div>
+
+      <div class="small-photos-row">
+        <img class="small-photo" src="apurvaa_main.jpg" alt="Apurvaa" />
+        <img class="small-photo" src="apurvaa_2.jpg" alt="Apurvaa" />
+        <img class="small-photo" src="apurvaa_4.jpg" alt="Apurvaa" />
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Corner decos -->
+  <div class="float-deco" style="top:40px; right:60px; animation-delay:0s;">🌸</div>
+  <div class="float-deco" style="top:80px; left:40px; animation-delay:1s; font-size:20px;">🌷</div>
+  <div class="float-deco" style="bottom:60px; right:80px; animation-delay:2s; font-size:18px;">✿</div>
+</section>
+
+<!-- Divider -->
+<div class="page-divider"></div>
+
+<!-- ===== PAGE 2 ===== -->
+<section class="page page-2">
+  <div class="p2-inner">
+
+    <!-- Left: love note -->
+    <div class="text-left">
+      <p class="label-small">✦ rishh's note ✦</p>
+
+      <div class="love-note">
+        "<span class="punjabi-word">Tu thodi thodi</span><br>
+        thiki lgge <span class="banger-word">dayum</span> gurl,<br><br>
+        <span style="color:#ffb3c6; display:inline-block; animation: flutter 3s ease-in-out 0.5s infinite;">Rishh wanna be</span><br>
+        <span style="color:#ff8fab; font-style:italic;">ur man gurl,</span><br><br>
+        teri body bhi<br>
+        mere gaano ki trh<br>
+        <span class="banger-word" style="font-size: 1.2em; color:#7ddba0;">BANGER."</span>
+        <span class="heart"> ♥</span>
+      </div>
+    </div>
+
+    <!-- Right: photo -->
+    <div class="photo-right">
+      <div class="flower-ring" id="flowerRing2" style="animation-direction: reverse;"></div>
+      <img src="apurvaa_3.jpg" alt="Apurvaa" />
+    </div>
+
+  </div>
+
+  <div class="float-deco" style="bottom:40px; left:60px; animation-delay:0.5s;">🌺</div>
+  <div class="float-deco" style="top:50px; right:50px; animation-delay:1.5s; font-size:20px;">🌸</div>
+  <div class="float-deco" style="bottom:80px; right:100px; animation-delay:2.5s; font-size:16px;">💐</div>
+</section>
+
+<script>
+// Stars
+const starsEl = document.getElementById('stars');
+for (let i = 0; i < 120; i++) {
+  const s = document.createElement('div');
+  s.className = 'star';
+  const size = Math.random() * 2.5 + 0.5;
+  s.style.cssText = `
+    width: ${size}px; height: ${size}px;
+    top: ${Math.random() * 100}%;
+    left: ${Math.random() * 100}%;
+    --d: ${Math.random() * 4 + 2}s;
+    animation-delay: ${Math.random() * 5}s;
+  `;
+  starsEl.appendChild(s);
+}
+
+// Floating petals
+const petalsEl = document.getElementById('petals');
+const petalEmojis = ['🌸', '🌺', '✿', '🌷', '🌼', '💮'];
+function spawnPetal() {
+  const p = document.createElement('div');
+  p.className = 'petal';
+  p.textContent = petalEmojis[Math.floor(Math.random() * petalEmojis.length)];
+  const size = Math.random() * 14 + 12;
+  const drift = (Math.random() - 0.5) * 200;
+  p.style.cssText = `
+    left: ${Math.random() * 100}%;
+    --sz: ${size}px;
+    --drift: ${drift}px;
+    animation-duration: ${Math.random() * 8 + 8}s;
+    animation-delay: ${Math.random() * 5}s;
+  `;
+  petalsEl.appendChild(p);
+  setTimeout(() => p.remove(), 16000);
+}
+setInterval(spawnPetal, 600);
+for (let i = 0; i < 12; i++) spawnPetal();
+
+// Floating flowers
+const floatingFlowersEl = document.getElementById('floating-flowers');
+const flowerEmojis = ['🌸', '🌺', '🌷', '💐', '🌼', '✿'];
+function spawnFloatingFlower() {
+  const f = document.createElement('div');
+  f.className = 'floating-flower';
+  f.textContent = flowerEmojis[Math.floor(Math.random() * flowerEmojis.length)];
+  const startX = Math.random() * 100;
+  const delay = Math.random() * 3;
+  f.style.cssText = `
+    left: ${startX}%;
+    top: ${Math.random() * 80 + 10}%;
+    animation-duration: ${Math.random() * 6 + 10}s;
+    animation-delay: ${delay}s;
+  `;
+  floatingFlowersEl.appendChild(f);
+  setTimeout(() => f.remove(), 16000 + delay * 1000);
+}
+setInterval(spawnFloatingFlower, 1200);
+for (let i = 0; i < 6; i++) spawnFloatingFlower();
+
+// Bloom effects
+const bloomsEl = document.getElementById('blooms');
+const bloomEmojis = ['🌸', '🌺', '💐', '✿', '🌷'];
+function spawnBloom() {
+  const b = document.createElement('div');
+  b.className = 'bloom';
+  b.textContent = bloomEmojis[Math.floor(Math.random() * bloomEmojis.length)];
+  const x = Math.random() * 100;
+  const y = Math.random() * 100;
+  const delay = Math.random() * 2;
+  b.style.cssText = `
+    left: ${x}%;
+    top: ${y}%;
+    animation-delay: ${delay}s;
+  `;
+  bloomsEl.appendChild(b);
+  setTimeout(() => b.remove(), 4000 + delay * 1000);
+}
+setInterval(spawnBloom, 800);
+for (let i = 0; i < 4; i++) spawnBloom();
+
+// Flower rings
+function buildRing(id, emojis, count, radius) {
+  const ring = document.getElementById(id);
+  if (!ring) return;
+  for (let i = 0; i < count; i++) {
+    const span = document.createElement('span');
+    span.textContent = emojis[i % emojis.length];
+    const angle = (i / count) * 2 * Math.PI;
+    const x = 50 + radius * Math.cos(angle);
+    const y = 50 + radius * Math.sin(angle);
+    span.style.cssText = `top: ${y}%; left: ${x}%; transform: translate(-50%, -50%); font-size: 18px;`;
+    ring.appendChild(span);
+  }
+}
+
+buildRing('flowerRing', ['🌸','🌺','🌷','✿','💐','🌼'], 10, 48);
+buildRing('flowerRing2', ['🌸','🌺','🌷','✿','💐','🌼'], 8, 48);
+</script>
+</body>
+</html>
