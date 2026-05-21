@@ -86,7 +86,7 @@
   }
 
   /* Floating petals */
-  .petal {
+  .bloom-petal {
     position: fixed;
     pointer-events: none;
     z-index: 1;
@@ -139,161 +139,223 @@
     100% { opacity: 0; transform: scale(1.3); }
   }
 
-  /* Living flower garden */
+  /* Living flower garden inspired by blooming night-flower CSS */
   .live-garden {
     position: fixed;
     inset: 0;
     pointer-events: none;
     z-index: 3;
     overflow: hidden;
+    opacity: 0.78;
+    perspective: 900px;
   }
 
-  .live-flower {
-    --stem: 130px;
-    --size: 34px;
-    --petal: #ff7aa8;
-    --core: #ffd166;
+  .css-flower {
+    --x: 50%;
+    --stem: 36vmin;
+    --size: 7vmin;
+    --tilt: 0deg;
+    --delay: 0s;
+    --speed: 4s;
+    --petal-a: #ff7aa8;
+    --petal-b: #ffc0d3;
+    --leaf: #39c6d6;
     position: absolute;
-    bottom: -18px;
+    bottom: -7vmin;
     left: var(--x);
-    width: var(--size);
-    height: calc(var(--stem) + var(--size));
+    width: 12vmin;
+    height: calc(var(--stem) + 14vmin);
     transform-origin: bottom center;
-    opacity: 0.62;
-    animation: gardenSway var(--speed) ease-in-out infinite;
-    animation-delay: var(--delay);
-    filter: drop-shadow(0 0 18px rgba(255, 95, 147, 0.42));
+    transform: translateX(-50%) rotate(var(--tilt));
+    opacity: 0.48;
+    filter: drop-shadow(0 0 2.2vmin rgba(255, 95, 147, 0.34));
+    animation: cssFlowerSway var(--speed) ease-in-out infinite;
+    animation-delay: calc(var(--delay) + 2.8s);
   }
 
-  .live-flower::before {
+  .flower-stem {
     content: '';
     position: absolute;
     left: 50%;
     bottom: 0;
-    width: 2px;
+    width: 0.45vmin;
     height: var(--stem);
-    background: linear-gradient(to top, rgba(94, 224, 194, 0.18), rgba(126, 238, 181, 0.72));
+    background:
+      linear-gradient(to left, rgba(0,0,0,0.24), transparent, rgba(255,255,255,0.22)),
+      linear-gradient(to top, transparent 5%, rgba(20,117,122,0.62), var(--leaf));
     border-radius: 999px;
+    box-shadow: inset 0 0 0.5vmin rgba(255,255,255,0.18), 0 0 2vmin rgba(57,198,214,0.22);
     transform: translateX(-50%) scaleY(0);
     transform-origin: bottom;
-    animation: stemGrow 3.4s ease var(--delay) forwards;
+    animation: cssStemGrow 3.4s ease var(--delay) forwards;
   }
 
-  .live-flower::after {
-    content: '';
+  .stem-leaf {
     position: absolute;
-    left: calc(50% + 2px);
-    bottom: calc(var(--stem) * 0.42);
-    width: calc(var(--size) * 0.52);
-    height: calc(var(--size) * 0.22);
-    background: rgba(94, 224, 194, 0.28);
-    border-radius: 100% 0 100% 0;
-    transform: rotate(-28deg) scale(0);
-    transform-origin: left center;
-    animation: leafOpen 2.8s ease calc(var(--delay) + 0.8s) forwards;
+    width: 6.5vmin;
+    height: 8vmin;
+    border-top-right-radius: 8vmin;
+    border-bottom-left-radius: 8vmin;
+    background: linear-gradient(to top, rgba(20,117,122,0.22), var(--leaf));
+    opacity: 0;
+    box-shadow: inset 0 0 1.3vmin rgba(255,255,255,0.18);
+    transform-origin: bottom left;
+    animation: cssLeafOpen 0.9s ease forwards;
   }
 
-  .flower-head {
+  .stem-leaf.left {
+    left: calc(50% - 7vmin);
+    bottom: calc(var(--stem) * 0.45);
+    transform: rotate(-68deg) rotateY(24deg) scale(0);
+    animation-delay: calc(var(--delay) + 1.2s);
+  }
+
+  .stem-leaf.right {
+    left: calc(50% + 0.9vmin);
+    bottom: calc(var(--stem) * 0.24);
+    transform: rotate(68deg) rotateY(-24deg) scale(0);
+    animation-delay: calc(var(--delay) + 1.55s);
+  }
+
+  .stem-leaf.small {
+    width: 4.8vmin;
+    height: 6vmin;
+    bottom: calc(var(--stem) * 0.67);
+    animation-delay: calc(var(--delay) + 1.85s);
+  }
+
+  .flower-bloom {
     position: absolute;
     left: 50%;
     bottom: var(--stem);
     width: var(--size);
     height: var(--size);
-    transform: translate(-50%, 50%) scale(0);
-    animation: blossomOpen 3.2s cubic-bezier(.2,.8,.2,1) calc(var(--delay) + 1s) forwards,
-               blossomPulse 4.2s ease-in-out calc(var(--delay) + 3s) infinite;
+    transform: translate(-50%, 45%) scale(0) rotateX(16deg);
+    transform-style: preserve-3d;
+    animation: cssBloomOpen 1.8s cubic-bezier(.2,.85,.2,1.25) calc(var(--delay) + 2.1s) forwards,
+               cssBloomPulse 3.6s ease-in-out calc(var(--delay) + 3.4s) infinite;
   }
 
-  .flower-head span {
+  .flower-bloom::after {
+    content: '';
     position: absolute;
     left: 50%;
     top: 50%;
-    width: 48%;
-    height: 48%;
-    background: radial-gradient(circle at 35% 30%, #fff3f8, var(--petal) 68%);
-    border-radius: 80% 20% 80% 20%;
-    transform-origin: 0 0;
-    opacity: 0.9;
+    width: 10vmin;
+    height: 10vmin;
+    background: radial-gradient(circle, rgba(255,209,102,0.54), transparent 68%);
+    transform: translate(-50%, -50%);
+    filter: blur(1.8vmin);
   }
 
-  .flower-head span:nth-child(1) { transform: rotate(0deg) translate(4%, -96%); }
-  .flower-head span:nth-child(2) { transform: rotate(72deg) translate(4%, -96%); }
-  .flower-head span:nth-child(3) { transform: rotate(144deg) translate(4%, -96%); }
-  .flower-head span:nth-child(4) { transform: rotate(216deg) translate(4%, -96%); }
-  .flower-head span:nth-child(5) { transform: rotate(288deg) translate(4%, -96%); }
+  .petal {
+    position: absolute;
+    left: 50%;
+    bottom: 50%;
+    width: calc(var(--size) * 0.56);
+    height: calc(var(--size) * 0.86);
+    border-radius: 56% 44% 48% 52% / 34% 36% 64% 66%;
+    background: radial-gradient(circle at 38% 26%, #fff8fb 0 12%, var(--petal-b) 34%, var(--petal-a) 86%);
+    transform-origin: bottom center;
+    opacity: 0.92;
+    box-shadow: inset 0 0 1.2vmin rgba(255,255,255,0.35);
+  }
 
-  .flower-core {
+  .bloom-petal:nth-child(1) { transform: translateX(-50%) rotate(0deg) translateY(-46%); }
+  .bloom-petal:nth-child(2) { transform: translateX(-50%) rotate(60deg) translateY(-46%); }
+  .bloom-petal:nth-child(3) { transform: translateX(-50%) rotate(120deg) translateY(-46%); }
+  .bloom-petal:nth-child(4) { transform: translateX(-50%) rotate(180deg) translateY(-46%); }
+  .bloom-petal:nth-child(5) { transform: translateX(-50%) rotate(240deg) translateY(-46%); }
+  .bloom-petal:nth-child(6) { transform: translateX(-50%) rotate(300deg) translateY(-46%); }
+
+  .bloom-core {
     position: absolute;
     left: 50%;
     top: 50%;
-    width: 34%;
-    height: 34%;
-    background: radial-gradient(circle, #fff7c8, var(--core));
+    width: calc(var(--size) * 0.34);
+    height: calc(var(--size) * 0.34);
+    background: radial-gradient(circle at 40% 35%, #fff9ce, #ffd166 62%, #ff8fab);
     border-radius: 50%;
     transform: translate(-50%, -50%);
-    box-shadow: 0 0 18px rgba(255, 209, 102, 0.75);
+    box-shadow: 0 0 2vmin rgba(255, 209, 102, 0.74);
   }
 
-  .side-bloom {
+  .garden-grass {
     position: absolute;
-    width: 120px;
-    height: 260px;
-    opacity: 0.38;
-    filter: blur(0.2px) drop-shadow(0 0 18px rgba(255, 179, 198, 0.38));
+    bottom: -1vmin;
+    left: 0;
+    width: 100%;
+    height: 22vmin;
+    opacity: 0.32;
+    filter: drop-shadow(0 0 2vmin rgba(94,224,194,0.18));
   }
 
-  .side-bloom.left { left: -34px; top: 16%; transform: rotate(10deg); }
-  .side-bloom.right { right: -30px; top: 54%; transform: rotate(-12deg) scaleX(-1); }
-
-  .side-bloom i {
+  .grass-blade {
     position: absolute;
-    left: 54px;
+    left: var(--x);
     bottom: 0;
-    width: 2px;
-    height: 230px;
-    background: linear-gradient(to top, transparent, rgba(94, 224, 194, 0.58), transparent);
-    border-radius: 999px;
+    width: var(--w);
+    height: var(--h);
+    border-top-left-radius: 100%;
+    border-left: 0.45vmin solid rgba(57, 198, 214, 0.62);
+    transform-origin: bottom center;
+    transform: rotate(var(--r));
+    -webkit-mask-image: linear-gradient(to top, transparent 6%, #000 58%);
+    mask-image: linear-gradient(to top, transparent 6%, #000 58%);
+    animation: grassSway var(--speed) ease-in-out infinite;
+    animation-delay: var(--delay);
   }
 
-  .side-bloom b {
+  .firefly {
     position: absolute;
-    width: 28px;
-    height: 28px;
-    background: radial-gradient(circle at 35% 35%, #fff1f6, #ff77a1 70%);
-    border-radius: 50% 50% 50% 8px;
-    animation: sideBloomPulse 4s ease-in-out infinite;
+    left: var(--x);
+    bottom: var(--y);
+    width: 0.9vmin;
+    height: 0.9vmin;
+    border-radius: 50%;
+    background: #fff59a;
+    box-shadow: 0 0 1.6vmin #ffd166, 0 0 3.2vmin rgba(94,224,194,0.58);
+    opacity: 0;
+    animation: fireflyRise var(--speed) linear infinite;
+    animation-delay: var(--delay);
   }
 
-  .side-bloom b:nth-child(2) { left: 30px; top: 28px; animation-delay: 0.2s; }
-  .side-bloom b:nth-child(3) { left: 66px; top: 74px; animation-delay: 0.8s; }
-  .side-bloom b:nth-child(4) { left: 24px; top: 136px; animation-delay: 1.3s; }
-  .side-bloom b:nth-child(5) { left: 70px; top: 188px; animation-delay: 1.9s; }
-
-  @keyframes stemGrow {
+  @keyframes cssStemGrow {
     to { transform: translateX(-50%) scaleY(1); }
   }
 
-  @keyframes leafOpen {
-    to { transform: rotate(-28deg) scale(1); }
+  @keyframes cssLeafOpen {
+    to { opacity: 0.86; transform: rotate(var(--open-rotate, -68deg)) rotateY(24deg) scale(1); }
   }
 
-  @keyframes blossomOpen {
-    to { transform: translate(-50%, 50%) scale(1); }
+  .stem-leaf.right {
+    --open-rotate: 68deg;
   }
 
-  @keyframes blossomPulse {
-    0%, 100% { filter: brightness(1); }
-    50% { filter: brightness(1.18); }
+  @keyframes cssBloomOpen {
+    to { transform: translate(-50%, 45%) scale(1) rotateX(16deg); }
   }
 
-  @keyframes gardenSway {
-    0%, 100% { transform: rotate(-2deg) translateY(0); }
-    50% { transform: rotate(3deg) translateY(-8px); }
+  @keyframes cssBloomPulse {
+    0%, 100% { filter: brightness(1) saturate(1); }
+    50% { filter: brightness(1.18) saturate(1.15); }
   }
 
-  @keyframes sideBloomPulse {
-    0%, 100% { transform: scale(0.9) rotate(-8deg); opacity: 0.64; }
-    50% { transform: scale(1.14) rotate(8deg); opacity: 1; }
+  @keyframes cssFlowerSway {
+    0%, 100% { transform: translateX(-50%) rotate(calc(var(--tilt) - 1.8deg)) rotateY(-4deg); }
+    50% { transform: translateX(-50%) rotate(calc(var(--tilt) + 2deg)) rotateY(5deg) translateY(-0.8vmin); }
+  }
+
+  @keyframes grassSway {
+    0%, 100% { transform: rotate(var(--r)); }
+    50% { transform: rotate(calc(var(--r) + 5deg)); }
+  }
+
+  @keyframes fireflyRise {
+    0% { opacity: 0; transform: translate3d(0, 0, 0) scale(0.7); }
+    12% { opacity: 0.85; }
+    55% { opacity: 0.9; transform: translate3d(var(--drift), -18vmin, 0) scale(1); }
+    100% { opacity: 0; transform: translate3d(calc(var(--drift) * -0.4), -36vmin, 0) scale(0.4); }
   }
 
   /* Layout */
@@ -749,10 +811,7 @@
 <div id="blooms"></div>
 
 <!-- Living garden -->
-<div class="live-garden" id="liveGarden">
-  <div class="side-bloom left"><i></i><b></b><b></b><b></b><b></b></div>
-  <div class="side-bloom right"><i></i><b></b><b></b><b></b><b></b></div>
-</div>
+<div class="live-garden" id="liveGarden"></div>
 
 <!-- Watermark -->
 <div class="name-stamp">Apurvaa</div>
@@ -915,39 +974,83 @@ for (let i = 0; i < 4; i++) spawnBloom();
 // Living garden flowers
 const liveGarden = document.getElementById('liveGarden');
 const gardenPalettes = [
-  ['#ff7aa8', '#ffd166'],
-  ['#ffb3c6', '#ffe08a'],
-  ['#e85d9e', '#f7d56b'],
-  ['#ff8fab', '#5ee0c2'],
-  ['#f6a6ff', '#ffd166']
+  ['#ff6f9f', '#ffd6e4', '#39c6d6'],
+  ['#ffb3c6', '#fff1f6', '#5ee0c2'],
+  ['#e85d9e', '#ffc2e2', '#2fc4a8'],
+  ['#f6a6ff', '#ffe2fa', '#39c6d6'],
+  ['#ff8fab', '#ffe4a6', '#7eeeb5']
 ];
 
 function plantLiveFlower(index) {
   const flower = document.createElement('div');
-  flower.className = 'live-flower';
-  const [petal, core] = gardenPalettes[index % gardenPalettes.length];
-  const size = 24 + Math.random() * 22;
-  const stem = 82 + Math.random() * 120;
-  const x = 4 + Math.random() * 92;
+  flower.className = 'css-flower';
+  const [petalA, petalB, leaf] = gardenPalettes[index % gardenPalettes.length];
+  const x = 5 + Math.random() * 90;
+  const stem = 15 + Math.random() * 17;
+  const size = 4.8 + Math.random() * 4.6;
   flower.style.cssText = `
     --x: ${x}%;
-    --size: ${size}px;
-    --stem: ${stem}px;
-    --petal: ${petal};
-    --core: ${core};
-    --speed: ${5 + Math.random() * 5}s;
-    --delay: ${Math.random() * 4}s;
+    --stem: ${stem}vmin;
+    --size: ${size}vmin;
+    --tilt: ${-18 + Math.random() * 36}deg;
+    --delay: ${Math.random() * 3.8}s;
+    --speed: ${3.8 + Math.random() * 2.8}s;
+    --petal-a: ${petalA};
+    --petal-b: ${petalB};
+    --leaf: ${leaf};
   `;
   flower.innerHTML = `
-    <div class="flower-head">
-      <span></span><span></span><span></span><span></span><span></span>
-      <div class="flower-core"></div>
+    <div class="flower-stem"></div>
+    <div class="stem-leaf left"></div>
+    <div class="stem-leaf right"></div>
+    <div class="stem-leaf left small"></div>
+    <div class="flower-bloom">
+      <span class="bloom-petal"></span>
+      <span class="bloom-petal"></span>
+      <span class="bloom-petal"></span>
+      <span class="bloom-petal"></span>
+      <span class="bloom-petal"></span>
+      <span class="bloom-petal"></span>
+      <div class="bloom-core"></div>
     </div>
   `;
   liveGarden.appendChild(flower);
 }
 
-for (let i = 0; i < 18; i++) plantLiveFlower(i);
+function plantGrassBlade(index) {
+  const grass = document.createElement('span');
+  grass.className = 'grass-blade';
+  grass.style.cssText = `
+    --x: ${Math.random() * 100}%;
+    --w: ${2.5 + Math.random() * 8}vmin;
+    --h: ${10 + Math.random() * 18}vmin;
+    --r: ${-38 + Math.random() * 76}deg;
+    --speed: ${2.5 + Math.random() * 2.2}s;
+    --delay: ${Math.random() * 2}s;
+  `;
+  return grass;
+}
+
+function releaseFirefly(index) {
+  const firefly = document.createElement('span');
+  firefly.className = 'firefly';
+  firefly.style.cssText = `
+    --x: ${6 + Math.random() * 88}%;
+    --y: ${8 + Math.random() * 46}vmin;
+    --drift: ${-18 + Math.random() * 36}vmin;
+    --speed: ${4.5 + Math.random() * 4}s;
+    --delay: ${Math.random() * 5}s;
+  `;
+  liveGarden.appendChild(firefly);
+}
+
+const grassPatch = document.createElement('div');
+grassPatch.className = 'garden-grass';
+for (let i = 0; i < 34; i++) grassPatch.appendChild(plantGrassBlade(i));
+liveGarden.appendChild(grassPatch);
+
+for (let i = 0; i < 16; i++) plantLiveFlower(i);
+for (let i = 0; i < 16; i++) releaseFirefly(i);
 
 // Flower rings
 function buildRing(id, emojis, count, radius) {
